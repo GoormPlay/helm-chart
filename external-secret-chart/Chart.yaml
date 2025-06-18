@@ -1,5 +1,0 @@
-apiVersion: v2
-name: external-secret-chart
-description: ExternalSecret + ConfigMap/Secret 생성용 Chart
-version: 0.1.0
-appVersion: "1.0"

@@ -1,6 +1,0 @@
-# 기본값 (개별 서비스에서 override 가능)
-serviceName: default-service
-namespace: default
-
-secrets: []
-secureSecrets: []
