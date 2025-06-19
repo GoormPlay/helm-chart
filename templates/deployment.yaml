@@ -1,19 +1,19 @@
-# base-template/templates/deployment.yaml
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Chart.Name }}
+  name: {{ include "base-template.fullname" . }}
   namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "base-template.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Chart.Name }}
+      {{- include "base-template.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: {{ .Chart.Name }}
+        {{- include "base-template.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -31,19 +31,19 @@ spec:
       {{- end }}
 
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "base-template.fullname" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
           ports:
             - containerPort: {{ .Values.service.targetPort }}
           envFrom:
             {{- if .Values.env.useConfigMap }}
             - configMapRef:
-                name: {{ .Chart.Name }}-config
+                name: {{ include "base-template.fullname" . }}-config
             {{- end }}
             {{- if .Values.env.useSecret }}
             - secretRef:
-                name: {{ .Chart.Name }}-secret
+                name: {{ include "base-template.fullname" . }}-secret
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

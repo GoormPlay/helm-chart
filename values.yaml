@@ -1,8 +1,11 @@
+nameOverride: ""
+fullnameOverride: ""
+
 replicaCount: 1
 
 image:
-  repository: nginx
-  tag: latest
+  repository: ""
+  tag: "latest"
   pullPolicy: IfNotPresent
 
 service:
@@ -11,23 +14,30 @@ service:
   targetPort: 8080
 
 env:
-  useConfigMap: true
-  useSecret: true
-
-resources:
-  requests:
-    cpu: 100m
-    memory: 256Mi
-  limits:
-    cpu: 300m
-    memory: 512Mi
-
-hpa:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 2
-  targetCPUUtilizationPercentage: 80
+  useConfigMap: false
+  useSecret: false
 
 ingress:
   enabled: false
-  host: api.aws-test-site.shop
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+externalSecret:
+  enabled: false
+  refreshInterval: "1h"
+  secretStore:
+    kind: SecretStore
+    name: aws-secret-store
+  dataFromKey: ""
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: 300m
+    memory: 384Mi
+
+affinity: {}
