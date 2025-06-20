@@ -30,3 +30,19 @@ Selector labels
 {{- define "base-template.selectorLabels" -}}
 app: {{ include "base-template.name" . }}
 {{- end }}
+{{- define "base-template.service" }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.fullnameOverride }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.nameOverride }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+  selector:
+    app: {{ .Values.nameOverride }}
+{{- end }}
