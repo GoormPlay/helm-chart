@@ -40,17 +40,15 @@ kind: Deployment
 metadata:
   name: {{ .Values.fullnameOverride }}
   namespace: {{ .Release.Namespace }}
-  labels:
-    app: {{ .Values.nameOverride }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.nameOverride }}
+      app: {{ .Values.fullnameOverride }}
   template:
     metadata:
       labels:
-        app: {{ .Values.nameOverride }}
+        app: {{ .Values.fullnameOverride }}
     spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -65,7 +63,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Values.nameOverride }}
+        - name: {{ .Values.fullnameOverride }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
           ports:
