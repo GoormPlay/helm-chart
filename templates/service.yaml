@@ -7,10 +7,10 @@ metadata:
   labels:
     {{- include "base-template.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type | default "ClusterIP" }}
+  type: {{ .Values.base-template.service.type | default "ClusterIP" }}
   selector:
     {{- include "base-template.selectorLabels" . | nindent 4 }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - port: {{ .Values.base-template.service.port }}
+      targetPort: {{ .Values.base-template.service.targetPort }}
 {{- end }}

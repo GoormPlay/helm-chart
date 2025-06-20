@@ -1,21 +1,20 @@
 {{/*
-Expand the name of the chart (nameOverride 우선).
+Expand the name of the chart (nameOverride 우선)
 */}}
 {{- define "base-template.name" -}}
-{{- default .Values.nameOverride .Chart.Name | trunc 63 | trimSuffix "-" }}
+{{- default .Values.base-template.nameOverride .Chart.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
-Create a default fully qualified app name (fullnameOverride 우선).
+Create a default fully qualified app name (fullnameOverride 우선)
 */}}
 {{- define "base-template.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- if .Values.base-template.fullnameOverride }}
+{{- .Values.base-template.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
 {{- include "base-template.name" . }}
 {{- end }}
 {{- end }}
-
 {{/*
 Common labels
 */}}
