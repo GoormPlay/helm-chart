@@ -2,7 +2,7 @@
 Expand the name of the chart (nameOverride 우선)
 */}}
 {{- define "base-template.name" -}}
-{{- default .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- default .Values.nameOverride .Chart.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
