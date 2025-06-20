@@ -10,17 +10,20 @@
 {{- end }}
 {{- end }}
 
-{{/*
-Common labels
-*/}}
 {{- define "base-template.labels" -}}
 app.kubernetes.io/name: {{ include "base-template.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{/*
-Selector labels
-*/}}
 {{- define "base-template.selectorLabels" -}}
 app: {{ include "base-template.name" . }}
+{{- end }}
+
+# 👇 Context 변환 헬퍼
+{{- define "base-template.ctx" -}}
+{{- if .Values.base-template }}
+{{- .Values.base-template | toYaml | fromYaml }}
+{{- else }}
+{{- .Values | toYaml | fromYaml }}
+{{- end }}
 {{- end }}
