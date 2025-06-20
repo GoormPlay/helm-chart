@@ -1,18 +1,16 @@
 {{- define "base-template.service" }}
-{{- $ctx := (include "base-template.ctx" .) | fromYaml }}
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ $ctx.fullnameOverride | default "default-name" }}
+  name: {{ include "base-template.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ $ctx.nameOverride | default "default-name" }}
+    {{- include "base-template.labels" . | nindent 4 }}
 spec:
-  type: {{ $ctx.service.type | default "ClusterIP" }}
+  type: {{ .Values.service.type | default "ClusterIP" }}
   selector:
-    app: {{ $ctx.nameOverride | default "default-name" }}
+    {{- include "base-template.selectorLabels" . | nindent 6 }}
   ports:
-    - port: {{ $ctx.service.port }}
-      targetPort: {{ $ctx.service.targetPort }}
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
 {{- end }}
