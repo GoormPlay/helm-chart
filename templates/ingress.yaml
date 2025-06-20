@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "base-template.fullname" . }}-ingress
+  name: {{ .Values.fullnameOverride }}-ingress
   namespace: {{ .Release.Namespace }}
   annotations:
     alb.ingress.kubernetes.io/scheme: internet-facing
@@ -24,7 +24,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ include "base-template.fullname" . }}
+                name: {{ .Values.fullnameOverride }}
                 port:
                   number: {{ .Values.service.port }}
 {{- end }}

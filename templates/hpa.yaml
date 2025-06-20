@@ -6,12 +6,12 @@ metadata:
   name: {{ include "base-template.fullname" . }}-hpa
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "base-template.labels" . | nindent 4 }}
+    {{ .Values.fullnameOverride | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "base-template.fullname" . }}
+    name: {{ .Values.fullnameOverride }}
   minReplicas: {{ .Values.hpa.minReplicas }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}
   metrics:

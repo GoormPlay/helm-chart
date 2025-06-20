@@ -2,19 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "base-template.fullname" . }}
+  name: {{ .Values.fullnameOverride }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "base-template.labels" . | nindent 4 }}
+    {{ .Values.fullnameOverride | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "base-template.selectorLabels" . | nindent 6 }}
+      {{ .Values.fullnameOverride | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "base-template.selectorLabels" . | nindent 8 }}
+        {{ .Values.fullnameOverride | nindent 8 }}
     spec:
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -32,7 +32,7 @@ spec:
       {{- end }}
 
       containers:
-        - name: {{ include "base-template.fullname" . }}
+        - name: {{ .Values.fullnameOverride }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
           ports:
@@ -40,11 +40,11 @@ spec:
           envFrom:
             {{- if .Values.env.useConfigMap }}
             - configMapRef:
-                name: {{ include "base-template.fullname" . }}-config
+                name: {{ .Values.fullnameOverride }}-config
             {{- end }}
             {{- if .Values.env.useSecret }}
             - secretRef:
-                name: {{ include "base-template.fullname" . }}-secret
+                name: {{ .Values.fullnameOverride }}-secret
             {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
