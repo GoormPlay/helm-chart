@@ -9,7 +9,7 @@ metadata:
 data:
   SPRING_PROFILES_ACTIVE: "prod"
   SPRING_SERVER_PORT: "8080"
-  S3_FRONTEND_ORIGIN: "front.aws-test-site.shop"
+  S3_FRONTEND_ORIGIN: "https://front.aws-test-site.shop"
   KAFKA_BOOTSTRAP_SERVERS: "15.164.236.86:9092,3.35.5.47:9092,43.203.112.201:9092"
   KAFKA_SCHEMA_REGISTRY_SERVER: "15.164.236.86:8081"
 {{- end }}
