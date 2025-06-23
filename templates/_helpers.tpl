@@ -145,7 +145,7 @@ metadata:
     alb.ingress.kubernetes.io/backend-protocol: HTTP
     alb.ingress.kubernetes.io/ssl-redirect: '443'
     alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=60
-    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:557690584596:certificate/1f54c664-4a64-41ab-94f9-e0ebddfea454
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:557690584596:certificate/e491f298-1ecc-4586-95d9-47e288a350ac
     alb.ingress.kubernetes.io/healthcheck-path: /
     alb.ingress.kubernetes.io/subnets: subnet-0903460f869caf2a1,subnet-00c246ce288c3cbf8
 spec:
