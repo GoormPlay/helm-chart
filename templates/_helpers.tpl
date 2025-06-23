@@ -9,7 +9,7 @@ metadata:
 data:
   SPRING_PROFILES_ACTIVE: "prod"
   SPRING_SERVER_PORT: "8080"
-  S3_FRONTEND_ORIGIN: "http://goorm-front.s3-website.ap-northeast-2.amazonaws.com"
+  S3_FRONTEND_ORIGIN: "front.aws-test-site.shop"
   KAFKA_BOOTSTRAP_SERVERS: "15.164.236.86:9092,3.35.5.47:9092,43.203.112.201:9092"
   KAFKA_SCHEMA_REGISTRY_SERVER: "15.164.236.86:8081"
 {{- end }}
@@ -138,12 +138,15 @@ metadata:
   name: {{ .Values.fullnameOverride }}-ingress
   namespace: {{ .Release.Namespace }}
   annotations:
+    kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/group.name: my-apps
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     alb.ingress.kubernetes.io/backend-protocol: HTTP
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
     alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=60
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:557690584596:certificate/1f54c664-4a64-41ab-94f9-e0ebddfea454
     alb.ingress.kubernetes.io/healthcheck-path: /
     alb.ingress.kubernetes.io/subnets: subnet-0903460f869caf2a1,subnet-00c246ce288c3cbf8
 spec:
