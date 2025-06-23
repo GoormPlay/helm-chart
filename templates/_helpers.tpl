@@ -44,11 +44,11 @@ spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Values.fullnameOverride }}
+      app: {{ .Values.nameOverride }}
   template:
     metadata:
       labels:
-        app: {{ .Values.fullnameOverride }}
+        app: {{ .Values.nameOverride }}
     spec:
       {{- with .Values.nodeSelector }}
       {{- end }}
@@ -75,8 +75,10 @@ spec:
             - secretRef:
                 name: {{ .Values.fullnameOverride }}-secret
             {{- end }}
+          {{- with .Values.resources }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
 {{- end }}
 
 {{/* base-template: external-secret */}}
