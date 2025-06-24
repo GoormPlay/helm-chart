@@ -113,8 +113,13 @@ metadata:
     app: {{ .Values.nameOverride }}
 spec:
   scaleTargetRef:
+    {{- if .Values.rollouts.enabled }}
+    apiVersion: argoproj.io/v1alpha1
+    kind: Rollout
+    {{- else }}
     apiVersion: apps/v1
     kind: Deployment
+    {{- end }}
     name: {{ .Values.fullnameOverride }}
   minReplicas: {{ .Values.hpa.minReplicas }}
   maxReplicas: {{ .Values.hpa.maxReplicas }}
