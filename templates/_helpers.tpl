@@ -254,3 +254,29 @@ spec:
           {{- end }}
       {{- end }}
 {{- end }}
+{{/* base-template: analysis-template */}}
+{{- define "base-template.analysis-template" }}
+{{- if .Values.rollouts.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: success-rate
+  namespace: {{ .Release.Namespace }}
+spec:
+  metrics:
+  - name: success-rate
+    interval: {{ .Values.rollouts.analysis.interval | default "30s" }}
+    count: {{ .Values.rollouts.analysis.count | default 1 }}
+    successCondition: {{ .Values.rollouts.analysis.successCondition | default "true" }}
+    provider:
+      job:
+        spec:
+          template:
+            spec:
+              containers:
+              - name: check
+                image: alpine:3.8
+                command: [sh, -c, "exit 0"]
+              restartPolicy: Never
+{{- end }}
+{{- end }}
