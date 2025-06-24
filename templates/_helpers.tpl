@@ -240,19 +240,6 @@ spec:
       previewService: {{ .Values.fullnameOverride }}-preview
       autoPromotionEnabled: {{ .Values.rollouts.autoPromotionEnabled | default false }}
       scaleDownDelaySeconds: {{ .Values.rollouts.blueGreen.scaleDownDelaySeconds | default 300 }}
-      {{- if .Values.rollouts.analysis }}
-      prePromotionAnalysis:
-        templates:
-          {{- with .Values.rollouts.analysis.templates }}
-          {{- toYaml . | nindent 10 }}
-          {{- end }}
-        args:
-          - name: service-name
-            value: {{ .Values.fullnameOverride }}
-          {{- with .Values.rollouts.analysis.additionalArgs }}
-          {{- toYaml . | nindent 10 }}
-          {{- end }}
-      {{- end }}
 {{- end }}
 {{/* base-template: analysis-template */}}
 {{- define "base-template.analysis-template" }}
