@@ -21,7 +21,7 @@ metadata:
   name: {{ .Values.fullnameOverride }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app: {{ .Values.nameOverride }}
+    app.kubernetes.io/name: {{ .Values.nameOverride }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -192,8 +192,6 @@ kind: Rollout
 metadata:
   name: {{ .Values.fullnameOverride }}
   namespace: {{ .Release.Namespace }}
-  labels:
-    app: {{ .Values.nameOverride }}
 spec:
   replicas: {{ .Values.replicaCount }}
   revisionHistoryLimit: 3
@@ -221,21 +219,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
           ports:
             - containerPort: {{ .Values.service.targetPort }}
-          # 프로브 추가
-          readinessProbe:
-            httpGet:
-              path: /health
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-          livenessProbe:
-            httpGet:
-              path: /health
-              port: {{ .Values.service.targetPort }}
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
           envFrom:
             {{- if .Values.env.useConfigMap }}
             - configMapRef:
