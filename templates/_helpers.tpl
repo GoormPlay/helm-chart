@@ -13,7 +13,6 @@ data:
   KAFKA_SCHEMA_REGISTRY_SERVER: "15.164.236.86:8081"
 {{- end }}
 {{- end }}
-
 {{/* base-template: service */}}
 {{- define "base-template.service" }}
 apiVersion: v1
@@ -254,21 +253,4 @@ spec:
           {{- toYaml . | nindent 10 }}
           {{- end }}
       {{- end }}
-{{- end }}
-{{/* base-template: preview-service */}}
-{{- define "base-template.preview-service" }}
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.fullnameOverride }}-preview
-  namespace: {{ .Release.Namespace }}
-  labels:
-    app: {{ .Values.nameOverride }}
-spec:
-  type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
-  selector:
-    app: {{ .Values.nameOverride }}
 {{- end }}
