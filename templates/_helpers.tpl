@@ -183,8 +183,6 @@ spec:
         app: {{ .Values.nameOverride }}
     spec:
       {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.affinity }}
       affinity:
@@ -214,22 +212,22 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
   strategy:
-    {{- if eq .Values.rollouts.strategy "canary" }}
-    canary:
-      steps:
-        {{- toYaml .Values.rollouts.steps | nindent 8 }}
-      analysis:
-        {{- if .Values.rollouts.analysis }}
-        {{- toYaml .Values.rollouts.analysis | nindent 8 }}
-        {{- end }}
-    {{- else if eq .Values.rollouts.strategy "blueGreen" }}
     blueGreen:
       activeService: {{ .Values.fullnameOverride }}
       previewService: {{ .Values.fullnameOverride }}-preview
       autoPromotionEnabled: {{ .Values.rollouts.autoPromotionEnabled | default false }}
+      scaleDownDelaySeconds: {{ .Values.rollouts.blueGreen.scaleDownDelaySeconds | default 300 }}
       {{- if .Values.rollouts.analysis }}
       prePromotionAnalysis:
-        {{- toYaml .Values.rollouts.analysis | nindent 8 }}
+        templates:
+          {{- with .Values.rollouts.analysis.templates }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+        args:
+          - name: service-name
+            value: {{ .Values.fullnameOverride }}
+          {{- with .Values.rollouts.analysis.additionalArgs }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
       {{- end }}
-    {{- end }}
 {{- end }}
