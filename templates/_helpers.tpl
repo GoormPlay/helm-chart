@@ -162,3 +162,74 @@ spec:
                   number: {{ .Values.service.port }}
 {{- end }}
 {{- end }}
+{{/* base-template: rollout */}}
+{{- define "base-template.rollout" }}
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ .Values.fullnameOverride }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.nameOverride }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: {{ .Values.nameOverride }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.nameOverride }}
+    spec:
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Values.fullnameOverride }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          envFrom:
+            {{- if .Values.env.useConfigMap }}
+            - configMapRef:
+                name: {{ .Values.fullnameOverride }}-config
+            {{- end }}
+            {{- if .Values.env.useSecret }}
+            - secretRef:
+                name: {{ .Values.fullnameOverride }}-secret
+            {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+  strategy:
+    {{- if eq .Values.rollouts.strategy "canary" }}
+    canary:
+      steps:
+        {{- toYaml .Values.rollouts.steps | nindent 8 }}
+      analysis:
+        {{- if .Values.rollouts.analysis }}
+        {{- toYaml .Values.rollouts.analysis | nindent 8 }}
+        {{- end }}
+    {{- else if eq .Values.rollouts.strategy "blueGreen" }}
+    blueGreen:
+      activeService: {{ .Values.fullnameOverride }}
+      previewService: {{ .Values.fullnameOverride }}-preview
+      autoPromotionEnabled: {{ .Values.rollouts.autoPromotionEnabled | default false }}
+      {{- if .Values.rollouts.analysis }}
+      prePromotionAnalysis:
+        {{- toYaml .Values.rollouts.analysis | nindent 8 }}
+      {{- end }}
+    {{- end }}
+{{- end }}
